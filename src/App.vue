@@ -2,21 +2,37 @@
   <div id="app">
     <h1>Twitch Viewer</h1>
 
-    <div class="container">
-        <table class="table table-hover">
+    <table class="table table-hover table-bordered">
+        <thead>
             <tr>
-                <td>ICON</td>
-                <td>My user</td>
-                <td>What am I streaming at the moment?</td>
+            <td>MOn icon</td>
+            <td>Le user</td>
+            <td>Les details</td>
             </tr>
-            <tr class="active">
-                <td>ICON</td>
-                <td>My user</td>
-                <td>What am I streaming at the moment?</td>
-            </tr>
-        </table>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="active">ICON</td>
+            <td class="danger">My user</td>
+            <td>What am I streaming at the moment?</td>
+        </tr>
+        <tr class="active">
+            <td>ICON</td>
+            <td>My user</td>
+            <td>What am I streaming at the moment?</td>
+        </tr>
+        <tr class="active">
+            <td>ICON</td>
+            <td>My user</td>
+            <td>What am I streaming at the moment?</td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <span class="label label-info">Testing 1-2-3</span>
+        <span class="label label-danger">Danger will robinson</span>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -31,6 +47,7 @@
 </script>
 
 <style lang="scss">
+    @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
