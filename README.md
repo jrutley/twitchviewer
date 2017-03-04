@@ -1,6 +1,6 @@
 # twitchviewer
 
-> View your favourite Twitch streams
+> View your favourite Twitch streams -- coming soon!
 
 ## Build Setup
 
