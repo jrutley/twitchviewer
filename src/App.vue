@@ -5,43 +5,83 @@
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
-            <td>MOn icon</td>
-            <td>Le user</td>
-            <td>Les details</td>
+            <td>Logo</td>
+            <td>Streamer</td>
+            <td>Status</td>
             </tr>
         </thead>
         <tbody>
-        <tr>
-            <td class="active">ICON</td>
-            <td class="danger">My user</td>
-            <td>What am I streaming at the moment?</td>
-        </tr>
-        <tr class="active">
-            <td>ICON</td>
-            <td>My user</td>
-            <td>What am I streaming at the moment?</td>
-        </tr>
-        <tr class="active">
-            <td>ICON</td>
-            <td>My user</td>
-            <td>What am I streaming at the moment?</td>
+        <tr v-for="s in streamers" v-bind:data-href="s.url">
+            <td>{{s.icon}}</td>
+            <td>{{s.user}}</td>
+            <td>{{s.status}}</td>
         </tr>
         </tbody>
     </table>
-    <div>
-        <span class="label label-info">Testing 1-2-3</span>
-        <span class="label label-danger">Danger will robinson</span>
-    </div>
 </div>
 </template>
 
 <script>
+    // API call to Twitch.
+    const baseUri = "https://wind-bow.gomix.me/twitch-api/";
+    let stream = "streams/";
+    let fcc = "freecodecamp";
+    let test = "test_channel";
+
+    let streams = [{
+        icon: "myicon",
+        user: fcc,
+        status: baseUri + test
+    }];
+
+    // foreach streamer
+
+    // On response, fill up a property on the data section
+
     export default {
         name: 'app',
         data() {
             return {
-                msg: 'Welcome to Your Vue.js App'
+                streams: [fcc, test, "ESL_SC2"],
+                streamers: [],
+            };
+        },
+        methods: {
+            liveStream: function() {
+                return this.streams.map(s => {
+                    return this.$http.get(baseUri + stream + s).then(r => {
+                        let response = r.body;
+                        if (response.stream === null) {
+                            return {
+                                icon: "myicon",
+                                user: s,
+                                status: "Offline",
+                                // TODO: Call this link in order to get the channel and get url prop from there
+                                url: response._links.channel
+                            };
+                        } else {
+                            return {
+                                icon: "myicon",
+                                user: s,
+                                status: response.stream.game,
+                                url: response._links.channel
+                            };
+                        }
+                    }).catch(console.log.bind(console));
+                }, response => {
+                    // error callback
+                    console.log(response);
+                    return response;
+                });
             }
+
+        },
+        mounted: function() {
+            this.liveStream().map(streamPromise => {
+                streamPromise.then(s => {
+                    this.streamers.push(s);
+                });
+            });
         }
     }
 </script>
@@ -76,7 +116,4 @@
     a {
         color: #42b983;
     }
-    /*.active {
-        background-color: #42b983;
-    }*/
 </style>
