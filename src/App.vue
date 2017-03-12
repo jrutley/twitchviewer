@@ -22,6 +22,7 @@
 </template>
 
 <script>
+    import co from 'co'
     // API call to Twitch.
     const baseUri = "https://wind-bow.gomix.me/twitch-api/";
     let streamUri = "streams/";
@@ -54,34 +55,20 @@
                 streamers: [],
             };
         },
-        methods: {
-            liveStream: function() {
-                return this.streams.map(s => {
-                    let sg = getLiveStream(this, s);
-                    return sg.next().value // should be r
-                        .then(r => sg.next(r).value)
-                        .then(myUrl => sg.next(myUrl).value)
-                        .catch(console.log.bind(console));
-                }, response => {
-                    console.log(response);
-                    return response;
-                });
-            }
-
-        },
         mounted: function() {
-            this.liveStream().map(streamPromise => {
-                streamPromise.then(s => {
-                    const u = s.url;
-                    let x = {
-                        icon: (u.logo === undefined || u.logo === null) ? "http://res.cloudinary.com/jrutley/image/upload/v1489329014/big_goose_egg.jpg" : u.logo,
-                        user: s.user,
-                        status: s.status === null ? "Offline" : s.status.game + " " + u.status,
-                        url: u.url
-                    }
-                    this.streamers.push(x);
-                }).catch(console.log.bind(console));
-            });
+            this.streams
+                .map(s => co(getLiveStream, this, s))
+                .map(streamPromise => {
+                    streamPromise.then(s => {
+                        const u = s.url;
+                        this.streamers.push({
+                            icon: (u.logo === undefined || u.logo === null) ? "http://res.cloudinary.com/jrutley/image/upload/v1489329014/big_goose_egg.jpg" : u.logo,
+                            user: s.user,
+                            status: s.status === null ? "Offline" : s.status.game + " " + u.status,
+                            url: u.url
+                        });
+                    }).catch(console.log.bind(console));
+                });
         }
     }
 </script>
